@@ -90,6 +90,7 @@ router.get('/new/', (req, res) => {
 //      - Em caso de erro do INSERT, colocar mensagem vermelhinha
 
 
+
 /* DELETE uma pessoa */
 // Exercício 2: IMPLEMENTAR AQUI
 // Dentro da callback de tratamento da rota:
@@ -98,5 +99,18 @@ router.get('/new/', (req, res) => {
 //      - Em caso de sucesso do INSERT, colocar uma mensagem feliz
 //      - Em caso de erro do INSERT, colocar mensagem vermelhinha
 
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id
+  try {
+	const [result] = await db.execute(`DELETE FROM person WHERE id=?`, [id]);
+	req.flash( "success", "NHAC Essa pessoa só existe agora em sua memória NHAC (pessoa deletada)");
+  }
+  catch (error){
+	req.flash( "error", `Essa pessoa não pode ser excluída e mandou uma mensagem criptografada: ${error}`);
+  }
+  finally {
+	  res.redirect('/people');
+  }
+})
 
 export default router
