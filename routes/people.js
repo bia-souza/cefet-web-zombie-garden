@@ -89,7 +89,19 @@ router.get('/new/', (req, res) => {
 //      - Em caso de sucesso do INSERT, colocar uma mensagem feliz
 //      - Em caso de erro do INSERT, colocar mensagem vermelhinha
 
-
+router.post('/', async (req, res) => {
+  const name = req.body.name;
+  try {
+    const [insertResult] = await db.execute(`INSERT INTO person (name, alive, eatenBy) VALUES (?, 1, NULL)`, [name]);
+	req.flash("success", `A pessoa ${name} entrou no jardim. Coitada...`);
+  }
+  catch (error){
+    req.flash("error", `A pessoa ${name} deve ter desistido de entrar no jardim e não foi adicionada`);
+  }
+  finally {
+    res.redirect('/people');
+  }
+});
 
 /* DELETE uma pessoa */
 // Exercício 2: IMPLEMENTAR AQUI
@@ -111,6 +123,6 @@ router.delete('/:id', async (req, res) => {
   finally {
 	  res.redirect('/people');
   }
-})
+});
 
 export default router
